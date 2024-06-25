@@ -32,9 +32,16 @@ const userSchema = new mongoose.Schema(
       minlength: 6,
     },
     deletedAt: {
-        type: Date,
-        default: null
-    }
+      type: Date,
+      default: null,
+      validate: {
+        validator: function (value) {
+          // Allow null values for deletedAt
+          return value === null || value instanceof Date;
+        },
+        message: "deletedAt must be a Date or null",
+      },
+    },
   },
   {
     timestamps: true,
@@ -44,9 +51,12 @@ const userSchema = new mongoose.Schema(
 // Hash the plain text password before saving
 userSchema.pre("save", async function (next) {
   const user = this;
+  console.log("yo");
+  console.log(user);
   if (user.isModified("password")) {
     user.password = await bcrypt.hash(user.password, 8);
   }
+  console.log("hello");
   next();
 });
 

@@ -1,13 +1,15 @@
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-const User = require("../models/User");
 const userService = require("./userService");
 
 exports.register = async (userData) => {
-  const user = new User(userData);
-  await user.save();
-  const token = generateAuthToken(user);
-  return { user, token };
+  try {
+    const user = await userService.createUser(userData);
+    const token = generateAuthToken(user);
+    return { user, token };
+  } catch (error) {
+    console.error("Registration failed:", error);
+    throw new Error(`Registration failed: ${error.message}`);
+  }
 };
 
 exports.login = async (emailOrUsername, password) => {

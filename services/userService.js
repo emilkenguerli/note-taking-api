@@ -1,5 +1,24 @@
 const User = require("../models/User");
 
+exports.createUser = async (userData) => {
+  console.log(userData);
+  const user = new User(userData);
+  try {
+    await user.save();
+    return user;
+  } catch (error) {
+    console.error("User creation failed:", JSON.stringify(error, null, 2));
+    if (error.name === "ValidationError") {
+      throw new Error(
+        `Validation failed: ${Object.values(error.errors)
+          .map((e) => e.message)
+          .join(", ")}`
+      );
+    }
+    throw new Error(`User creation failed: ${error.message}`);
+  }
+};
+
 exports.getUser = async (userId) => {
   const user = await User.findOne({ _id: userId, deletedAt: null });
   if (!user) {

@@ -24,7 +24,7 @@ module.exports = {
               description: "must be a date",
             },
             deletedAt: {
-              bsonType: "date",
+              bsonType: ["date", "null"],
               description: "must be a date or null",
             },
           },
@@ -71,7 +71,7 @@ module.exports = {
               description: "must be a date",
             },
             deletedAt: {
-              bsonType: "date",
+              bsonType: ["date", "null"],
               description: "must be a date or null",
             },
           },
@@ -107,7 +107,7 @@ module.exports = {
               description: "must be a string and is required",
             },
             deletedAt: {
-              bsonType: "date",
+              bsonType: ["date", "null"],
               description: "must be a date or null",
             },
             createdAt: {
