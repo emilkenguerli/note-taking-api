@@ -1,0 +1,21 @@
+# Node modules
+node_modules/
+
+# Lock files
+package-lock.json
+yarn.lock
+
+# dotenv environment variables file
+.env
+
+# IDE specific files
+.vscode/
+
+# Optional npm cache directory
+.npm/
+
+# Optional eslint cache
+.eslintcache
+
+# dotenv environment variables file
+.env
