@@ -24,5 +24,5 @@ exports.logout = async (user, token) => {
 
 // Utility functions
 const generateAuthToken = (user) => {
-  return jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
+  return jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: '1h' });
 };
