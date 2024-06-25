@@ -5,7 +5,7 @@ const auth = require("../middlewares/auth");
 
 // Routes for categories, protected by the auth middleware
 router.post("/", auth, categoryController.createCategory);
-router.get("/", categoryController.getCategories);
+router.get("/", auth, categoryController.getCategories);
 router.patch("/:id", auth, categoryController.updateCategory);
 router.delete("/:id", auth, categoryController.deleteCategory);
 
