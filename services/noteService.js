@@ -3,10 +3,19 @@ const Fuse = require("fuse.js");
 const mongoose = require("mongoose");
 
 exports.createNote = async (noteData, userId) => {
+  // Ensure userId is an ObjectId
+  const userObjectId = mongoose.Types.ObjectId(userId);
+
+  // Handle the category field
+  if (!noteData.category) {
+    delete noteData.category; // Remove the category field if it is empty
+  }
+
   const note = new Note({
     ...noteData,
-    user: userId,
+    user: userObjectId, // Ensure user field is an ObjectId
   });
+
   await note.save();
   return note;
 };
