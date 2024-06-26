@@ -1,5 +1,5 @@
 const Note = require("../models/Note");
-const Category = require("../models/Category");
+const Fuse = require("fuse.js");
 
 exports.createNote = async (noteData, userId) => {
   const note = new Note({
