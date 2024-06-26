@@ -30,6 +30,12 @@ This is a Note-Taking application with multi-user support, categories, and searc
 
 ### Create an .env using the example as reference
 
+### Create an empty MongoDB database
+
+### `npm install`
+
+To install and get necessary packages.
+
 ## Available Scripts
 
 In the project directory, you can run:
@@ -40,7 +46,7 @@ Starts the development server in watch mode.
 
 ### `npm run migrate:up`
 
-Run migration to create database and Users, Categories, and Notes collections, as well as seed them.
+Run migration to create database collections - Users, Categories, and Notes collections, as well as seed them.
 
 ### `npm run migrate:down`
 
