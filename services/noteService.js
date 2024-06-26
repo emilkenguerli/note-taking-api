@@ -175,13 +175,18 @@ exports.updateNote = async (noteId, userId, updates) => {
 exports.deleteNote = async (noteId, userId) => {
   const note = await Note.findOne({
     _id: noteId,
-    user: userId,
+    $or: [
+      { user: userId }, // If the user is the owner
+      { public: true }, // If the note is public
+    ],
     deletedAt: null,
   });
+
   if (!note) {
-    throw new Error("Note not found");
+    throw new Error("Note not found or not accessible");
   }
   note.deletedAt = new Date();
   await note.save();
   return note;
 };
+
