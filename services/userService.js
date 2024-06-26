@@ -19,12 +19,12 @@ exports.createUser = async (userData) => {
   }
 };
 
-exports.getUser = async (userId) => {
-  const user = await User.findOne({ _id: userId, deletedAt: null });
-  if (!user) {
-    throw new Error("User not found");
+exports.getUsers = async () => {
+  const users = await User.find({ deletedAt: null });
+  if (!users || users.length === 0) {
+    throw new Error("No users found");
   }
-  return user;
+  return users;
 };
 
 exports.updateUser = async (user, updates) => {

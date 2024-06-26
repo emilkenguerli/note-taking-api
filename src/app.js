@@ -18,7 +18,7 @@ app.use(cors());
 app.use("/api/auth", authRoutes);
 app.use("/api/notes", noteRoutes);
 app.use("/api/categories", categoryRoutes);
-app.use("/api/user", userRoutes);
+app.use("/api/users", userRoutes);
 
 // Error handling middleware
 app.use(errorHandler);
