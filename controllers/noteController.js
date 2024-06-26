@@ -17,6 +17,15 @@ exports.createNote = async (req, res, next) => {
   }
 };
 
+exports.getNote = async (req, res, next) => {
+  try {
+    const note = await noteService.getNote(req.params.id, req.user._id);
+    res.status(200).json(note);
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.getNotes = async (req, res, next) => {
   try {
     const notes = await noteService.getNotes(req.user._id, req.query);

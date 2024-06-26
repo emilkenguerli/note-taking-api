@@ -20,6 +20,20 @@ exports.createNote = async (noteData, userId) => {
   return note;
 };
 
+exports.getNote = async (noteId, userId) => {
+  const note = await Note.findOne({
+    _id: noteId,
+    $or: [{ public: true }, { user: userId }],
+    $or: [{ deletedAt: { $exists: false } }, { deletedAt: null }],
+  }).populate("category");
+
+  if (!note) {
+    throw new Error("Note not found");
+  }
+
+  return note;
+};
+
 exports.getNotes = async (
   userId,
   {
