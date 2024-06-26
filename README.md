@@ -9,7 +9,7 @@ This is a Note-Taking application with multi-user support, categories, and searc
 
 - User Registration and Login
 - Create, View, Edit, and Delete Notes
-- Public and Private Notes
+- Users are able to create Public and Private Notes
 - CRUD Operations for Categories
 - Search and Filter Notes
 - Pagination for Notes and Categories
