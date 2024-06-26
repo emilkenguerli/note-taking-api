@@ -1,4 +1,5 @@
 const Note = require("../models/Note");
+const Category = require("../models/Category");
 
 exports.createNote = async (noteData, userId) => {
   const note = new Note({
@@ -83,6 +84,7 @@ exports.getNotes = async (
   // Fetch potential notes based on basic criteria
   let potentialNotes = await Note.find(query)
     .sort({ [sort]: 1 })
+    .populate("category", "name")
     .exec();
 
   // Perform regex filtering on title and description
