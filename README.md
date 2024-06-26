@@ -25,7 +25,7 @@ This is a Note-Taking application with multi-user support, categories, and searc
 
 ### Clone the Repository
 
-`git clone https://github.com/emilkenguerli/note-taking-front-end.git`
+`git clone https://github.com/emilkenguerli/note-taking-api.git`
 
 ## Available Scripts
 
