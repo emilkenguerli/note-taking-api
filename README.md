@@ -2,19 +2,20 @@
 
 ## Introduction
 
-This is a Note-Taking application with multi-user support, categories, and search functionality. It allows users to create, edit, and delete notes. Notes can be public or private. Categories can be managed with CRUD operations.
+This is a Note-Taking application with multi-user support, categories, and search functionality. It allows users to create, edit, and delete notes. Notes can be public or private. Categories can be managed with CRUD operations. 
 
 
 ## Features
 
-- User Registration and Login
+- User Registration and Login with JWT signed Tokens
 - Create, View, Edit, and Delete Notes
 - Users are able to create Public and Private Notes
-- CRUD Operations for Categories
+- Private notes will only show up for the user that created them
+- CRUD Operations for Categories, all Categories are public
 - Search and Filter Notes
 - Pagination for Notes and Categories
 - Multi-user Support
-- Error Handling
+- Custom Error Handling
 
 ## Getting Started
 
@@ -26,6 +27,8 @@ This is a Note-Taking application with multi-user support, categories, and searc
 ### Clone the Repository
 
 `git clone https://github.com/emilkenguerli/note-taking-api.git`
+
+### Create an .env using the example as reference
 
 ## Available Scripts
 
@@ -42,3 +45,9 @@ Run migration to create database and Users, Categories, and Notes collections, a
 ### `npm run migrate:down`
 
 Drop the database.
+
+## Technologies Used
+
+- Node.js
+- Express
+- MongoDB
