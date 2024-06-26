@@ -7,6 +7,14 @@ exports.createCategory = async (data) => {
   return category;
 };
 
+exports.getCategory = async (categoryId) => {
+  const category = await Category.findOne({ _id: categoryId, deletedAt: null });
+  if (!category) {
+    throw new Error("Category not found");
+  }
+  return category;
+};
+
 exports.getCategories = async (page, limit) => {
   const pageNum = parseInt(page, 10);
   const limitNum = parseInt(limit, 10);
