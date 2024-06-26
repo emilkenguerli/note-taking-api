@@ -1,5 +1,6 @@
 const Note = require("../models/Note");
 const Fuse = require("fuse.js");
+const mongoose = require("mongoose");
 
 exports.createNote = async (noteData, userId) => {
   const note = new Note({
@@ -38,9 +39,18 @@ exports.getNotes = async (
     ],
   };
 
-  // Add category filter
+  // Add category filter by name
   if (filters.category) {
-    query.$and.push({ category: filters.category });
+    const categoryFilter = {
+      $or: [{ name: new RegExp(filters.category, "i") }],
+    };
+    const categories = await mongoose
+      .model("Category")
+      .find(categoryFilter)
+      .select("_id");
+    query.$and.push({
+      category: { $in: categories.map((category) => category._id) },
+    });
   }
 
   // Add creation date filter
