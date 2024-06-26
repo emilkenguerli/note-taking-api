@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const authRoutes = require("../routes/authRoutes");
 const noteRoutes = require("../routes/noteRoutes");
 const categoryRoutes = require("../routes/categoryRoutes");
@@ -9,6 +10,9 @@ const app = express();
 
 // Middleware to parse JSON bodies
 app.use(express.json());
+
+// Enable CORS for all routes
+app.use(cors());
 
 // Route handlers
 app.use("/api/auth", authRoutes);
