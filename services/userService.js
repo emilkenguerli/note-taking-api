@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
+const AppError = require("../utils/AppError");
 
 exports.createUser = async (userData) => {
   const user = new User(userData);
@@ -9,20 +10,20 @@ exports.createUser = async (userData) => {
   } catch (error) {
     console.error("User creation failed:", JSON.stringify(error, null, 2));
     if (error.name === "ValidationError") {
-      throw new Error(
+      throw new AppError(
         `Validation failed: ${Object.values(error.errors)
           .map((e) => e.message)
           .join(", ")}`
       );
     }
-    throw new Error(`User creation failed: ${error.message}`);
+    throw new AppError(`User creation failed: ${error.message}`);
   }
 };
 
 exports.getUsers = async () => {
   const users = await User.find({ deletedAt: null });
   if (!users || users.length === 0) {
-    throw new Error("No users found");
+    throw new AppError("No users found");
   }
   return users;
 };
@@ -36,7 +37,7 @@ exports.updateUser = async (user, updates) => {
 exports.deleteUser = async (userId) => {
   const user = await User.findOne({ _id: userId, deletedAt: null });
   if (!user) {
-    throw new Error("User not found");
+    throw new AppError("User not found");
   }
   user.deletedAt = new Date();
   await user.save();
@@ -49,12 +50,12 @@ exports.findByCredentials = async (emailOrUsername, password) => {
   });
 
   if (!user) {
-    throw new Error("Unable to login");
+    throw new AppError("Unable to login");
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    throw new Error("Unable to login");
+    throw new AppError("Unable to login");
   }
 
   return user;

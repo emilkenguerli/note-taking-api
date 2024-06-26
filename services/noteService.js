@@ -1,6 +1,7 @@
 const Note = require("../models/Note");
 const Fuse = require("fuse.js");
 const mongoose = require("mongoose");
+const AppError = require("../utils/AppError");
 
 exports.createNote = async (noteData, userId) => {
   // Ensure userId is an ObjectId
@@ -28,7 +29,7 @@ exports.getNote = async (noteId, userId) => {
   }).populate("category");
 
   if (!note) {
-    throw new Error("Note not found");
+    throw new AppError("Note not found");
   }
 
   return note;
@@ -163,7 +164,7 @@ exports.updateNote = async (noteId, userId, updates) => {
   });
 
   if (!note) {
-    throw new Error("Note not found or not accessible");
+    throw new AppError("Note not found or not accessible");
   }
 
   Object.keys(updates).forEach((update) => (note[update] = updates[update]));
@@ -183,7 +184,7 @@ exports.deleteNote = async (noteId, userId) => {
   });
 
   if (!note) {
-    throw new Error("Note not found or not accessible");
+    throw new AppError("Note not found or not accessible");
   }
   note.deletedAt = new Date();
   await note.save();

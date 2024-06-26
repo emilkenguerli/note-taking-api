@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const userService = require("./userService");
+const AppError = require("../utils/AppError");
 
 exports.register = async (userData) => {
   try {
@@ -8,7 +9,7 @@ exports.register = async (userData) => {
     return { user, token };
   } catch (error) {
     console.error("Registration failed:", error);
-    throw new Error(`Registration failed: ${error.message}`);
+    throw new AppError(`Registration failed: ${error.message}`);
   }
 };
 

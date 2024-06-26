@@ -1,5 +1,6 @@
 const Category = require("../models/Category");
 const Note = require("../models/Note");
+const AppError = require("../utils/AppError");
 
 exports.createCategory = async (data) => {
   const category = new Category(data);
@@ -10,7 +11,7 @@ exports.createCategory = async (data) => {
 exports.getCategory = async (categoryId) => {
   const category = await Category.findOne({ _id: categoryId, deletedAt: null });
   if (!category) {
-    throw new Error("Category not found");
+    throw new AppError("Category not found");
   }
   return category;
 };
@@ -50,7 +51,7 @@ exports.updateCategory = async (id, updates) => {
 exports.deleteCategory = async (id) => {
   const notes = await Note.find({ category: id });
   if (notes.length > 0) {
-    throw new Error("Cannot delete category with assigned notes");
+    throw new AppError("Cannot delete category with assigned notes");
   }
 
   const category = await Category.findOneAndUpdate(
@@ -60,7 +61,7 @@ exports.deleteCategory = async (id) => {
   );
 
   if (!category) {
-    throw new Error("Category not found");
+    throw new AppError("Category not found");
   }
 
   return category;
