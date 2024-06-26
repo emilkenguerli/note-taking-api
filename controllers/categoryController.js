@@ -9,6 +9,15 @@ exports.createCategory = async (req, res, next) => {
   }
 };
 
+exports.getCategory = async (req, res, next) => {
+  try {
+    const category = await categoryService.getCategory(req.params.id);
+    res.status(200).json(category);
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.getCategories = async (req, res, next) => {
   try {
     const { page = 1, limit = 10 } = req.query;

@@ -1,11 +1,37 @@
 const Note = require("../models/Note");
+const Fuse = require("fuse.js");
+const mongoose = require("mongoose");
+const AppError = require("../utils/AppError");
 
 exports.createNote = async (noteData, userId) => {
+  // Ensure userId is an ObjectId
+  const userObjectId = mongoose.Types.ObjectId(userId);
+
+  // Handle the category field
+  if (!noteData.category) {
+    delete noteData.category; // Remove the category field if it is empty
+  }
+
   const note = new Note({
     ...noteData,
-    user: userId,
+    user: userObjectId, // Ensure user field is an ObjectId
   });
+
   await note.save();
+  return note;
+};
+
+exports.getNote = async (noteId, userId) => {
+  const note = await Note.findOne({
+    _id: noteId,
+    $or: [{ public: true }, { user: userId }],
+    $or: [{ deletedAt: { $exists: false } }, { deletedAt: null }],
+  }).populate("category");
+
+  if (!note) {
+    throw new AppError("Note not found");
+  }
+
   return note;
 };
 
@@ -37,9 +63,18 @@ exports.getNotes = async (
     ],
   };
 
-  // Add category filter
+  // Add category filter by name
   if (filters.category) {
-    query.$and.push({ category: filters.category });
+    const categoryFilter = {
+      $or: [{ name: new RegExp(filters.category, "i") }],
+    };
+    const categories = await mongoose
+      .model("Category")
+      .find(categoryFilter)
+      .select("_id");
+    query.$and.push({
+      category: { $in: categories.map((category) => category._id) },
+    });
   }
 
   // Add creation date filter
@@ -68,21 +103,10 @@ exports.getNotes = async (
     });
   }
 
-  // Filter by user if users array is provided
-  if (users.length > 0) {
-    if (users.includes("select_all")) {
-      // Extract unique user IDs from notes
-      const userSet = new Set(notes.map((note) => note.user.toString()));
-      users = Array.from(userSet);
-    } else {
-      // Filter notes to include only those from the specified users
-      notes = notes.filter((note) => users.includes(note.user.toString()));
-    }
-  }
-
   // Fetch potential notes based on basic criteria
   let potentialNotes = await Note.find(query)
     .sort({ [sort]: 1 })
+    .populate("category", "name")
     .exec();
 
   // Perform regex filtering on title and description
@@ -104,6 +128,18 @@ exports.getNotes = async (
     notes = fuse.search(search).map((result) => result.item);
   }
 
+  // Filter by user if users array is provided
+  if (users.length > 0) {
+    if (users.includes("select_all")) {
+      // Extract unique user IDs from notes
+      const userSet = new Set(notes.map((note) => note.user.toString()));
+      users = Array.from(userSet);
+    } else {
+      // Filter notes to include only those from the specified users
+      notes = notes.filter((note) => users.includes(note.user.toString()));
+    }
+  }
+
   // Paginate the results
   const total = notes.length;
   notes = notes.slice((pageNum - 1) * limitNum, pageNum * limitNum);
@@ -120,12 +156,17 @@ exports.getNotes = async (
 exports.updateNote = async (noteId, userId, updates) => {
   const note = await Note.findOne({
     _id: noteId,
-    user: userId,
+    $or: [
+      { user: userId }, // If the user is the owner
+      { public: true }, // If the note is public
+    ],
     deletedAt: null,
   });
+
   if (!note) {
-    throw new Error("Note not found");
+    throw new AppError("Note not found or not accessible");
   }
+
   Object.keys(updates).forEach((update) => (note[update] = updates[update]));
   note.updatedAt = Date.now();
   await note.save();
@@ -135,13 +176,18 @@ exports.updateNote = async (noteId, userId, updates) => {
 exports.deleteNote = async (noteId, userId) => {
   const note = await Note.findOne({
     _id: noteId,
-    user: userId,
+    $or: [
+      { user: userId }, // If the user is the owner
+      { public: true }, // If the note is public
+    ],
     deletedAt: null,
   });
+
   if (!note) {
-    throw new Error("Note not found");
+    throw new AppError("Note not found or not accessible");
   }
   note.deletedAt = new Date();
   await note.save();
   return note;
 };
+

@@ -1,9 +1,26 @@
 const noteService = require("../services/noteService");
+const Note = require("../models/Note");
 
 exports.createNote = async (req, res, next) => {
   try {
-    const note = await noteService.createNote(req.body, req.user._id);
+    const noteData = { ...req.body };
+
+    // Handle the category field
+    if (noteData.category === "") {
+      noteData.category = null;
+    }
+
+    const note = await noteService.createNote(noteData, req.user._id);
     res.status(201).json(note);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getNote = async (req, res, next) => {
+  try {
+    const note = await noteService.getNote(req.params.id, req.user._id);
+    res.status(200).json(note);
   } catch (error) {
     next(error);
   }

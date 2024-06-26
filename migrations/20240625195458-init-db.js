@@ -124,6 +124,74 @@ module.exports = {
     });
     await db.collection("users").createIndex({ username: 1 }, { unique: true });
     await db.collection("users").createIndex({ email: 1 }, { unique: true });
+
+    // Seed Categories
+    const categories = [
+      {
+        name: "Work",
+        description: "Work related notes",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        name: "Personal",
+        description: "Personal notes",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ];
+    await db.collection("categories").insertMany(categories);
+
+    // Seed Users
+    const users = [
+      {
+        firstName: "John",
+        lastName: "Doe",
+        username: "johndoe",
+        email: "johndoe@example.com",
+        password: "password123", // In a real application, passwords should be hashed
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        firstName: "Jane",
+        lastName: "Smith",
+        username: "janesmith",
+        email: "janesmith@example.com",
+        password: "password123", // In a real application, passwords should be hashed
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ];
+    await db.collection("users").insertMany(users);
+
+    // Seed Notes
+    const userIds = await db.collection("users").find({}, { _id: 1 }).toArray();
+    const categoryIds = await db
+      .collection("categories")
+      .find({}, { _id: 1 })
+      .toArray();
+    const notes = [
+      {
+        title: "Meeting Notes",
+        description: "Notes from the client meeting",
+        category: categoryIds[0]._id,
+        public: true,
+        user: userIds[0]._id,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        title: "Grocery List",
+        description: "List of groceries to buy",
+        category: categoryIds[1]._id,
+        public: false,
+        user: userIds[1]._id,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ];
+    await db.collection("notes").insertMany(notes);
   },
 
   async down(db, client) {
