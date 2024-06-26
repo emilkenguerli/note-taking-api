@@ -79,18 +79,6 @@ exports.getNotes = async (
     });
   }
 
-  // Filter by user if users array is provided
-  if (users.length > 0) {
-    if (users.includes("select_all")) {
-      // Extract unique user IDs from notes
-      const userSet = new Set(notes.map((note) => note.user.toString()));
-      users = Array.from(userSet);
-    } else {
-      // Filter notes to include only those from the specified users
-      notes = notes.filter((note) => users.includes(note.user.toString()));
-    }
-  }
-
   // Fetch potential notes based on basic criteria
   let potentialNotes = await Note.find(query)
     .sort({ [sort]: 1 })
@@ -114,6 +102,18 @@ exports.getNotes = async (
     };
     const fuse = new Fuse(potentialNotes, options);
     notes = fuse.search(search).map((result) => result.item);
+  }
+
+  // Filter by user if users array is provided
+  if (users.length > 0) {
+    if (users.includes("select_all")) {
+      // Extract unique user IDs from notes
+      const userSet = new Set(notes.map((note) => note.user.toString()));
+      users = Array.from(userSet);
+    } else {
+      // Filter notes to include only those from the specified users
+      notes = notes.filter((note) => users.includes(note.user.toString()));
+    }
   }
 
   // Paginate the results
