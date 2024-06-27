@@ -30,11 +30,11 @@ This is a Note-Taking application with multi-user support, categories, and searc
 
 ### Create an .env file
 
-Use the `.env.example` file as reference
+Use the `.env.example` file as reference.
 
 ### Create an empty MongoDB database
 
-Use MongoDB Compass 
+Use MongoDB Compass.
 
 ### `npm install`
 
