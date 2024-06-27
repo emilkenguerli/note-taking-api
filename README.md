@@ -28,9 +28,13 @@ This is a Note-Taking application with multi-user support, categories, and searc
 
 `git clone https://github.com/emilkenguerli/note-taking-api.git`
 
-### Create an .env using the example as reference
+### Create an .env file
+
+Use the `.env.example` file as reference
 
 ### Create an empty MongoDB database
+
+Use MongoDB Compass 
 
 ### `npm install`
 
